@@ -1,0 +1,441 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>tile &mdash; econlearn 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="econlearn 1.0 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">econlearn 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for tile</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;Tilecoding based machine learning&quot;&quot;&quot;</span>
+
+<span class="c"># Authors:  Neal Hughes &lt;neal.hughes@anu.edu.au&gt;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pylab</span>
+<span class="kn">from</span> <span class="nn">tilecode</span> <span class="kn">import</span> <span class="n">Tilecode</span>
+
+<div class="viewcode-block" id="TilecodeSamplegrid"><a class="viewcode-back" href="../tiles.html#tile.TilecodeSamplegrid">[docs]</a><span class="k">class</span> <span class="nc">TilecodeSamplegrid</span><span class="p">:</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Construct a sample grid (sample of approximately equidistant points) from </span>
+<span class="sd">    a  large data set, using a tilecoding data structure</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    D : int,</span>
+<span class="sd">        Number of input dimensions</span>
+
+<span class="sd">    L : int,</span>
+<span class="sd">        Number of tilings or &#39;layers&#39;</span>
+
+<span class="sd">    mem_max : float, optional (default = 1)</span>
+<span class="sd">        Tile array size, values less than 1 turn on hashing</span>
+
+<span class="sd">    cores : int, optional (default=1)</span>
+<span class="sd">        Number of CPU cores to use (fitting stage is parallelized)</span>
+
+<span class="sd">    offset : {&#39;optimal&#39;, &#39;random&#39;, &#39;uniform&#39;}, optional</span>
+<span class="sd">        Type of displacement vector used</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    This is an approximate method: it is possible that the resulting sample will contain</span>
+<span class="sd">    some points less than ``radius`` distance apart. The accuracy improves with the number </span>
+<span class="sd">    of layers ``L``.</span>
+
+<span class="sd">    Currently the tile widths are defined as ``int(1 / radius)**-1``, so small changes in </span>
+<span class="sd">    radius may have no effect.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+ 
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">mem_max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="s">&#39;optimal&#39;</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">D</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">offset</span> <span class="o">==</span> <span class="s">&#39;optimal&#39;</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="s">&#39;uniform&#39;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">D</span> <span class="o">=</span> <span class="n">D</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">L</span> <span class="o">=</span> <span class="n">L</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mem_max</span> <span class="o">=</span> <span class="n">mem_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cores</span> <span class="o">=</span> <span class="n">cores</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="o">=</span> <span class="n">offset</span>
+        
+<div class="viewcode-block" id="TilecodeSamplegrid.fit"><a class="viewcode-back" href="../tiles.html#tile.TilecodeSamplegrid.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fit a density function to X and return a sample grid with a maximum of M points</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        X : array of shape [N, D]</span>
+<span class="sd">            Input data</span>
+<span class="sd">    </span>
+<span class="sd">        radius : float in (0, 1)</span>
+<span class="sd">            minimum distance between points (determines tile widths)</span>
+
+<span class="sd">        prop : float in (0, 1), optional (default=1.0)</span>
+<span class="sd">            Proportion of sample points to return (lowest density points are excluded)</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        GRID, array of shape [M, D]</span>
+<span class="sd">            The sample grid with M &lt; N points</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">Tr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">radius</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="p">[</span><span class="n">Tr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tile</span> <span class="o">=</span> <span class="n">Tilecode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">L</span><span class="p">,</span> <span class="n">mem_max</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mem_max</span> <span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cores</span><span class="p">,</span> <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span> 
+        
+        <span class="n">N</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">GRID</span><span class="p">,</span> <span class="n">max_points</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">fit_samplegrid</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">prop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_points</span> <span class="o">=</span> <span class="n">max_points</span>
+
+        <span class="k">return</span> <span class="n">GRID</span>
+
+</div></div>
+<div class="viewcode-block" id="TilecodeRegressor"><a class="viewcode-back" href="../tiles.html#tile.TilecodeRegressor">[docs]</a><span class="k">class</span> <span class="nc">TilecodeRegressor</span><span class="p">:</span>
+
+    <span class="sd">&quot;&quot;&quot;    </span>
+<span class="sd">    Tile coding for function approximation (Supervised Learning).  </span>
+<span class="sd">    Fits by averaging and/or Stochastic Gradient Descent.</span>
+<span class="sd">    Supports multi-core fit and predict. Options for uniform, random or &#39;optimal&#39; displacement vectors.</span>
+<span class="sd">    Provides option for linear spline extrapolation / filling</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    </span>
+<span class="sd">    D : integer</span>
+<span class="sd">        Total number of input dimensions </span>
+<span class="sd">    </span>
+<span class="sd">    T : list of integers, length D</span>
+<span class="sd">        Number of tiles per dimension </span>
+<span class="sd">    </span>
+<span class="sd">    L : integer</span>
+<span class="sd">        Number of tiling &#39;layers&#39;</span>
+
+<span class="sd">    mem_max : double, (default=1)</span>
+<span class="sd">        Proportion of tiles to store in memory: less than 1 means hashing is used.</span>
+<span class="sd">    </span>
+<span class="sd">    min_sample : integer, (default=50) </span>
+<span class="sd">        Minimum number of observations per tile</span>
+
+<span class="sd">    offset : string, (default=&#39;uniform&#39;)</span>
+<span class="sd">        Type of displacement vector, one of &#39;uniform&#39;, &#39;random&#39; or &#39;optimal&#39;</span>
+
+<span class="sd">    lin_spline : boolean, (default=False)</span>
+<span class="sd">        Use sparse linear spline model to extrapolate / fill empty tiles</span>
+
+<span class="sd">    linT : integer, (default=6)</span>
+<span class="sd">        Number of linear spline knots per dimension</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    tile : Cython Tilecode instance</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">mem_max</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_sample</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="s">&#39;optimal&#39;</span><span class="p">,</span> <span class="n">lin_spline</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">linT</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        
+        <span class="k">if</span> <span class="n">D</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">offset</span> <span class="o">==</span> <span class="s">&#39;optimal&#39;</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="s">&#39;uniform&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tile</span> <span class="o">=</span> <span class="n">Tilecode</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">mem_max</span><span class="p">,</span> <span class="n">min_sample</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">lin_spline</span><span class="p">,</span> <span class="n">linT</span><span class="p">,</span> <span class="n">cores</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TilecodeRegressor.fit"><a class="viewcode-back" href="../tiles.html#tile.TilecodeRegressor.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&#39;A&#39;</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pc_samp</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;    </span>
+<span class="sd">        Estimate tilecode weights. </span>
+<span class="sd">        Supports `Averaging&#39;, Stochastic Gradient Descent (SGD) and Averaged SGD.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        X : array, shape=(N, D) </span>
+<span class="sd">            Input data (unscaled)</span>
+
+<span class="sd">        Y : array, shape=(N) </span>
+<span class="sd">            Output data (unscaled)</span>
+
+<span class="sd">        method : string (default=&#39;A&#39;)</span>
+<span class="sd">            Estimation method, one of &#39;A&#39; (for Averaging), &#39;SGD&#39; or &#39;ASGD&#39;.</span>
+
+<span class="sd">        score : boolean, (default=False)</span>
+<span class="sd">            Calculate R-squared</span>
+
+<span class="sd">        copy : boolean (default=False)</span>
+<span class="sd">            Store X and Y</span>
+
+<span class="sd">        a : array, optional shape=(D) </span>
+<span class="sd">            Percentile to use for minimum tiling range (if not provided set to 0)</span>
+<span class="sd">        </span>
+<span class="sd">        b : array, optional, shape=(D) </span>
+<span class="sd">            Percentile to use for maximum tiling range (if not provided set to 100)</span>
+
+<span class="sd">        pc_samp : float, optional, (default=1)</span>
+<span class="sd">            Proportion of sample to use when calculating percentile ranges</span>
+
+<span class="sd">        eta : float (default=.01)</span>
+<span class="sd">            SGD Learning rate</span>
+
+<span class="sd">        n_iters : int (default=1)</span>
+<span class="sd">            Number of passes over the data set in SGD</span>
+
+<span class="sd">        scale : float (default=0)</span>
+<span class="sd">            Learning rate scaling factor in SGD</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;A&#39;</span><span class="p">:</span>
+            <span class="n">sgd</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="n">asgd</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;SGD&#39;</span><span class="p">:</span>
+            <span class="n">sgd</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">asgd</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&#39;ASGD&#39;</span><span class="p">:</span>
+            <span class="n">sgd</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="n">asgd</span> <span class="o">=</span> <span class="bp">True</span>
+        
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="n">copy</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">pc_samp</span><span class="o">=</span><span class="n">pc_samp</span><span class="p">,</span> <span class="n">sgd</span><span class="o">=</span><span class="n">sgd</span><span class="p">,</span> <span class="n">asgd</span><span class="o">=</span><span class="n">asgd</span><span class="p">,</span> <span class="n">eta</span><span class="o">=</span><span class="n">eta</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span> <span class="n">n_iters</span><span class="o">=</span><span class="n">n_iters</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TilecodeRegressor.check_memory"><a class="viewcode-back" href="../tiles.html#tile.TilecodeRegressor.check_memory">[docs]</a>    <span class="k">def</span> <span class="nf">check_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">):</span>
+        
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provides information on the current memory usage of the tilecoding scheme.</span>
+<span class="sd">        If memory usage is an issue call this function after fitting and then consider rebuilding the scheme with a lower `mem_max` parameter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">print</span> <span class="s">&#39;Number of Layers: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">L</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&#39;Tiles per layer: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">SIZE</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&#39;Total tiles: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">L</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">SIZE</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&#39;Weight array size after hashing: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">mem_max</span><span class="p">)</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">count</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">mem_max</span>
+        <span class="k">print</span> <span class="s">&#39;Percentage of weight array active: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">count</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">mem_max</span><span class="p">)</span>
+        <span class="n">mem_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">mem_max</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">L</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">SIZE</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&#39;----------------------------------------------&#39;</span>
+        <span class="k">print</span> <span class="s">&#39;Estimated current memory usage (Mb): &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">mem_max</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">print</span> <span class="s">&#39;----------------------------------------------&#39;</span>
+        <span class="k">print</span> <span class="s">&#39;Current hashing parameter (mem_max): &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mem_max</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&#39;Minimum hashing parameter (mem_max): &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">temp</span><span class="o">*</span><span class="n">mem_max</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TilecodeRegressor.predict"><a class="viewcode-back" href="../tiles.html#tile.TilecodeRegressor.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        
+        <span class="sd">&quot;&quot;&quot;    </span>
+<span class="sd">        Return tilecode predicted value </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        X : array, shape=(N, D) or (D,)</span>
+<span class="sd">            Input data</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">    </span>
+<span class="sd">        Y : array, shape=(N,)</span>
+<span class="sd">            Predicted values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="TilecodeRegressor.plot"><a class="viewcode-back" href="../tiles.html#tile.TilecodeRegressor.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xargs</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">],</span> <span class="n">showdata</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the function on along one dimension, holding others fixed </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        xargs : list, length = D</span>
+<span class="sd">            List of variable default values, set plotting dimension to &#39;x&#39;</span>
+<span class="sd">            Not required if D = 1</span>
+
+<span class="sd">        showdata : boolean, (default=False)</span>
+<span class="sd">            Scatter training points</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xargs</span><span class="o">=</span><span class="n">xargs</span><span class="p">,</span> <span class="n">showdata</span><span class="o">=</span><span class="n">showdata</span><span class="p">)</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</div></div>
+<div class="viewcode-block" id="TilecodeDensity"><a class="viewcode-back" href="../tiles.html#tile.TilecodeDensity">[docs]</a><span class="k">class</span> <span class="nc">TilecodeDensity</span><span class="p">():</span>
+
+    <span class="sd">&quot;&quot;&quot;    </span>
+<span class="sd">    Tile coding approximation of the pdf / cdf of X  </span>
+<span class="sd">    Fits by averaging. Supports multi-core fit and predict.</span>
+<span class="sd">    Options for uniform, random or &#39;optimal&#39; displacement vectors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    -----------</span>
+<span class="sd">    </span>
+<span class="sd">    D : integer</span>
+<span class="sd">        Total number of input dimensions </span>
+<span class="sd">    </span>
+<span class="sd">    T : list of integers, length D</span>
+<span class="sd">        Number of tiles per dimension </span>
+<span class="sd">    </span>
+<span class="sd">    L : integer</span>
+<span class="sd">        Number of tiling &#39;layers&#39;</span>
+
+<span class="sd">    mem_max : double, (default=1)</span>
+<span class="sd">        Proportion of tiles to store in memory: less than 1 means hashing is used.</span>
+<span class="sd">    </span>
+<span class="sd">    min_sample : integer, (default=50) </span>
+<span class="sd">        Minimum number of observations per tile</span>
+
+<span class="sd">    offset : string, (default=&#39;uniform&#39;)</span>
+<span class="sd">        Type of displacement vector, one of &#39;uniform&#39;, &#39;random&#39; or &#39;optimal&#39;</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    tile : Tilecode instance</span>
+<span class="sd">    </span>
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    See also</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">mem_max</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="s">&#39;optimal&#39;</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">D</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">offset</span> <span class="o">==</span> <span class="s">&#39;optimal&#39;</span><span class="p">:</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="s">&#39;uniform&#39;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">tile</span> <span class="o">=</span> <span class="n">Tilecode</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">mem_max</span><span class="o">=</span><span class="n">mem_max</span><span class="p">,</span> <span class="n">min_sample</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span> <span class="n">cores</span><span class="o">=</span><span class="n">cores</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">cdf</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        
+        <span class="n">N</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">])</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span><span class="o">**-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> 
+        <span class="n">adj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="o">**-</span><span class="mi">1</span>  
+        <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">countsuminv</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span> <span class="o">*</span> <span class="n">adj</span>
+
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">predict_prob</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TilecodeDensity.plot"><a class="viewcode-back" href="../tiles.html#tile.TilecodeDensity.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xargs</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;x&#39;</span><span class="p">]):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the pdf / cdf on along one dimension, holding others fixed </span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+<span class="sd">        xargs : list, length = D</span>
+<span class="sd">            List of variable default values, set plotting dimension to &#39;x&#39;</span>
+<span class="sd">            Not required if D = 1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">plot_prob</span><span class="p">(</span><span class="n">xargs</span><span class="o">=</span><span class="n">xargs</span><span class="p">)</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">econlearn 1.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014, Neal Hughes.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+    </div>
+  </body>
+</html>
