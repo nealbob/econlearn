@@ -1,2 +1,5 @@
 numpydoc
 numpy
+pylab
+cython
+sklearn
