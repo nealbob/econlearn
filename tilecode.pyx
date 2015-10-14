@@ -866,7 +866,7 @@ cdef class Tilecode:
                         self.w[i] = self.wav[i] * (n**-1)
 
             self.wav = np.zeros([self.mem_max])
-
+    """
     cdef void fit_sgd(self, double[:,:] X, double[:] Y, double eta, double scale, int n_iters, int ASGD):
 
         cdef int i, j, k, t, it = 0
@@ -895,6 +895,51 @@ cdef class Tilecode:
                     # compute error
                     error = (Y[i] - y) * self.Linv
 
+                    for j in range(self.L):
+                        self.w[idx[j]] += error * alpha
+                        self.wav[idx[j]] += self.w[idx[j]]
+                        idx[j] = 0
+
+        if ASGD == 1:           
+            for i in prange(self.mem_max, nogil=True, num_threads=self.CORES, schedule=guided):
+                n = self.count[i]
+                self.w[i] = self.wav[i] * (n**-1)
+    """
+
+    cdef void fit_sgd(self, double[:,:] X, double[:] Y, double eta, double scale, int n_iters, int ASGD):
+
+        cdef int i, j, k, t, it = 0
+        cdef int[:] idx = self.tempidx
+        cdef double Yhat
+        cdef double y
+        cdef double alpha = 0
+        cdef double error = 0
+        cdef double n = 0
+        cdef double power = (2.0/3.0)
+        
+        for it in range(n_iters):
+            t = 0
+            for i in range(self.N):
+                if self.extrap[i] == 0:
+                    t += 1
+                    alpha =  eta * (((1 +  eta * scale * t)**power)**-1)
+
+                    # predict yhat
+                    y = 0
+                    for j in range(self.L): 
+                        idx[j] = getindex(j, i, X, self.D, self.offset, self.flat, self.SIZE, self.dohash, self.mem_max, self.key)
+                        y += self.w[idx[j]]
+                    y =  y * self.Linv
+
+                    # compute error
+                    error = (Y[i] - y) * self.Linv
+                    #error = 200 * (1 + c_exp(-0.06*error))**-1 - 100
+                    
+                    #if error > 200:
+                    #    error = 0
+                    #elif error < -200:
+                    #    error = 0
+                    
                     for j in range(self.L):
                         self.w[idx[j]] += error * alpha
                         self.wav[idx[j]] += self.w[idx[j]]

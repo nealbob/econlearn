@@ -1,0 +1,28 @@
+API Reference
+=============
+
+.. currentmodule:: tile
+
+Supervised learning (Regression)
+--------------------------------
+
+.. autosummary::
+    
+    TilecodeRegressor
+
+
+Unsupervised learning
+---------------------
+
+.. autosummary::
+    
+    TilecodeSamplegrid
+    TilecodeDensity
+    TilecodeNearestNeighbour
+    
+Reinforcement learning
+----------------------
+
+.. autosummary::
+    
+    TilecodeQVIteration 
