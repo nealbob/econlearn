@@ -11,7 +11,7 @@ Overview
 
 ``econlearn`` contains a number of supervised learning (regression), unsupervised learning and reinforcement learning algorithms, suitable for problems with large sample sizes but relatively few dimensions (large N, small D). 
 
-``econlearn`` was developed to solve problems that arise in economics, particularly stochastic dynamic optimisation problems (Markov Decision Processes MDPs). A key feature of ``econlearn`` is the batch reinforcement learning method 'Fitted QV iteration with Tile coding, for solving MDPs by simulation (described in more detail `here <http://nealhughes.net/thesis/Thesis_main.pdf#page=200`_).
+``econlearn`` was developed to solve problems that arise in economics, particularly stochastic dynamic optimisation problems (Markov Decision Processes MDPs). A key feature of ``econlearn`` is the batch reinforcement learning method 'Fitted QV iteration with Tile coding, for solving MDPs by simulation (described in more detail `here <https://nealhughes.net/thesis/Thesis_main.pdf#page=200>`_).
 
 ``econlearn`` is designed to be fast. All algorithms are implemented in Cython and several make use of multi-threading. 
 
