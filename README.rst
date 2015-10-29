@@ -11,27 +11,27 @@ Overview
 
 ``econlearn`` contains a number of supervised learning (regression), unsupervised learning and reinforcement learning algorithms, suitable for problems with large sample sizes but relatively few dimensions (large N, small D). 
 
-``econlearn`` was developed to solve problems that arise in economics, particularly stochastic dynamic optimisation problems (Markov Decision Processes MDPs). A key feature of ``econlearn`` is the batch reinforcement learning method 'Fitted QV iteration with Tile coding', for solving MDPs by simulation (described in more detail in my thesis `here <https://nealhughes.net/thesis/Thesis_main.pdf>`_).
+``econlearn`` was developed to solve problems that arise in economics, particularly stochastic dynamic optimisation problems (Markov Decision Processes MDPs). A key feature is the batch reinforcement learning method 'Fitted QV iteration with Tile coding', for solving MDPs by simulation (described in more detail in my thesis `here <https://nealhughes.net/thesis/Thesis_main.pdf>`_).
 
 ``econlearn`` is designed to be fast. All algorithms are implemented in Cython and several make use of multi-threading.  Many of the methods make use of a tile coding (i.e., overlapping grid) data structure. For pure speed of both fitting and prediction tile coding is hard to beat. In higher dimensions tile coding can run into memory problems. ``econlearn`` includes a simple implementation of 'hashing' to help limit memory usage.
 
 Supervised learning (regression)
 --------------------------------
-Tile coding
-Radial Basis Functions
-Local quadratic regression
-Distance weighted regression 
+* Tile coding
+* Radial Basis Functions
+* Local quadratic regression
+* Distance weighted regression 
 
 Unsupervised learning
 ---------------------
-Sample grid (distance)
-Sample grid (tile coding)
-Density estimation (tile coding)
-Approximate nearest neighbors (tile coding)
+* Sample grid (distance)
+* Sample grid (tile coding)
+* Density estimation (tile coding)
+* Approximate nearest neighbors (tile coding)
 
 Reinforcement learning
 ----------------------
-Fitted QV Iteration with Tile coding
+* Fitted QV Iteration with Tile coding
 
 Installation
 ============
