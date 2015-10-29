@@ -15,20 +15,21 @@
 import sys
 import os
 
-from mock import Mock as MagicMock
+#from mock import Mock as MagicMock
 
-class Mock(MagicMock):
-    @classmethod
-    def __getattr__(cls, name):
-            return Mock()
-
-MOCK_MODULES = ['sklearn', 'cython', 'pylab', 'tilecode', 'matplotlib', 'econlearn']
-sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+#class Mock(MagicMock):
+#    @classmethod
+#    def __getattr__(cls, name):
+#            return Mock()
+#
+#MOCK_MODULES = ['sklearn', 'cython', 'pylab', 'tilecode', 'matplotlib', 'econlearn']
+#sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.append(os.path.abspath('..'))
+sys.path.append('/home/nealbob/Dropbox/')
 
 # -- General configuration ------------------------------------------------
 
@@ -58,6 +59,8 @@ source_suffix = '.rst'
 
 # The master toctree document.
 master_doc = 'index'
+
+numpydoc_show_class_members = False
 
 # General information about the project.
 project = u'econlearn'
@@ -118,7 +121,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinxdoc'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

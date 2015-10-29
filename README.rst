@@ -13,14 +13,14 @@ Overview
 
 ``econlearn`` was developed to solve problems that arise in economics, particularly stochastic dynamic optimisation problems (Markov Decision Processes MDPs). A key feature is the batch reinforcement learning method 'Fitted QV iteration with Tile coding', for solving MDPs by simulation (described in more detail in my thesis `here <https://nealhughes.net/thesis/Thesis_main.pdf>`_).
 
-``econlearn`` is designed to be fast. All algorithms are implemented in Cython and several make use of multi-threading.  Many of the methods make use of a tile coding (i.e., overlapping grid) data structure. For pure speed of both fitting and prediction tile coding is hard to beat. In higher dimensions tile coding can run into memory problems. ``econlearn`` includes a simple implementation of 'hashing' to help limit memory usage.
+``econlearn`` is designed to be fast. All algorithms are implemented in Cython and several make use of multi-threading.  Many of the methods make use of a tile coding (i.e., overlapping grid) data structure. For pure speed of both fitting and prediction, tile coding is hard to beat. In higher dimensions tile coding can run into memory problems. ``econlearn`` includes a simple implementation of 'hashing' to help limit memory usage.
 
 Supervised learning (regression)
 --------------------------------
 * Tile coding
 * Radial Basis Functions
-* Local quadratic regression
-* Distance weighted regression 
+* Local quadratic
+* Distance weighted OLS 
 
 Unsupervised learning
 ---------------------

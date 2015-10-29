@@ -1,0 +1,6 @@
+API
+===
+
+.. automodule:: econlearn.tile
+    :members:
+

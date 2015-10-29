@@ -1,0 +1,5 @@
+Tilecoding
+==========
+
+.. automodule:: econlearn.tile
+    :members:

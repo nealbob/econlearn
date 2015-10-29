@@ -1,5 +1,3 @@
-"""Tilecoding based machine learning"""
-
 # Authors:  Neal Hughes <neal.hughes@anu.edu.au>
 
 from __future__ import division

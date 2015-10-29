@@ -3,17 +3,39 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-econlearn
-=========
 
-Intro
+Econlearn documentation
+=======================
 
-Contents:
+.. currentmodule:: econlearn.tile
+
+Supervised learning (Regression)
+--------------------------------
+
+.. autosummary::
+    
+    TilecodeRegressor
+
+
+Unsupervised learning
+---------------------
+
+.. autosummary::
+    TilecodeSamplegrid
+    TilecodeDensity
+    TilecodeNearestNeighbour
+    
+Reinforcement learning
+----------------------
+
+.. autosummary::
+    
+    TilecodeQVIteration 
+
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    
-    Examples <examples>
-    API Reference <api>
+   api
 ..
 
