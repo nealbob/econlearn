@@ -1,0 +1,809 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>econlearn.tile &mdash; econlearn 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="econlearn 1.0 documentation" href="index.html"/>
+        <link rel="prev" title="Econlearn documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+        
+
+        
+          <a href="index.html" class="icon icon-home"> econlearn
+        
+
+        
+        </a>
+
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+        
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        
+          
+          
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">econlearn.tile</a></li>
+</ul>
+
+          
+        
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">econlearn</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>econlearn.tile</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/api.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+            
+  <div class="section" id="module-econlearn.tile">
+<span id="econlearn-tile"></span><h1>econlearn.tile<a class="headerlink" href="#module-econlearn.tile" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="econlearn.tile.TilecodeDensity">
+<em class="property">class </em><code class="descclassname">econlearn.tile.</code><code class="descname">TilecodeDensity</code><span class="sig-paren">(</span><em>D</em>, <em>T</em>, <em>L</em>, <em>mem_max=1</em>, <em>offset='optimal'</em>, <em>cores=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeDensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeDensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tile coding approximation of the pdf of X  
+Fits by averaging. Supports multi-core fit and predict.
+Options for uniform, random or &#8216;optimal&#8217; displacement vectors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>D</strong> : integer</p>
+<blockquote>
+<div><p>Total number of input dimensions</p>
+</div></blockquote>
+<p><strong>T</strong> : list of integers, length D</p>
+<blockquote>
+<div><p>Number of tiles per dimension</p>
+</div></blockquote>
+<p><strong>L</strong> : integer</p>
+<blockquote>
+<div><p>Number of tiling &#8216;layers&#8217;</p>
+</div></blockquote>
+<p><strong>mem_max</strong> : double, (default=1)</p>
+<blockquote>
+<div><p>Proportion of tiles to store in memory: less than 1 means hashing is used.</p>
+</div></blockquote>
+<p><strong>min_sample</strong> : integer, (default=50)</p>
+<blockquote>
+<div><p>Minimum number of observations per tile</p>
+</div></blockquote>
+<p><strong>offset</strong> : string, (default=&#8217;uniform&#8217;)</p>
+<blockquote class="last">
+<div><p>Type of displacement vector, one of &#8216;uniform&#8217;, &#8216;random&#8217; or &#8216;optimal&#8217;</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>tile</td>
+<td>(Tilecode instance)</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="econlearn.tile.TilecodeDensity.plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><em>xargs=['x']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeDensity.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeDensity.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the pdf along one dimension, holding others fixed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>xargs</strong> : list, length = D</p>
+<blockquote class="last">
+<div><p>List of variable default values, set plotting dimension to &#8216;x&#8217;
+Not required if D = 1</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="econlearn.tile.TilecodeNearestNeighbour">
+<em class="property">class </em><code class="descclassname">econlearn.tile.</code><code class="descname">TilecodeNearestNeighbour</code><span class="sig-paren">(</span><em>D</em>, <em>L</em>, <em>mem_max=1</em>, <em>cores=1</em>, <em>offset='optimal'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeNearestNeighbour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeNearestNeighbour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fast approximate nearest neighbour search using tile coding data structure</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>D</strong> : int,</p>
+<blockquote>
+<div><p>Number of input dimensions</p>
+</div></blockquote>
+<p><strong>L</strong> : int,</p>
+<blockquote>
+<div><p>Number of tilings or &#8216;layers&#8217;</p>
+</div></blockquote>
+<p><strong>mem_max</strong> : float, optional (default = 1)</p>
+<blockquote>
+<div><p>Tile array size, values less than 1 turn on hashing</p>
+</div></blockquote>
+<p><strong>cores</strong> : int, optional (default=1)</p>
+<blockquote>
+<div><p>Number of CPU cores to use (fitting stage is parallelized)</p>
+</div></blockquote>
+<p><strong>offset</strong> : {&#8216;optimal&#8217;, &#8216;random&#8217;, &#8216;uniform&#8217;}, (default=&#8217;optimal&#8217;) optional</p>
+<blockquote class="last">
+<div><p>Type of displacement vector used</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This is an approximate method: it is possible that some points &gt; than radius may be included 
+and some &lt; than radius may be excluded.</p>
+<dl class="method">
+<dt id="econlearn.tile.TilecodeNearestNeighbour.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>radius</em>, <em>prop=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeNearestNeighbour.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeNearestNeighbour.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a tile coding data structure to X</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : array of shape [N, D]</p>
+<blockquote>
+<div><p>Input data (unscaled)</p>
+</div></blockquote>
+<p><strong>radius</strong> : float</p>
+<blockquote class="last">
+<div><p>radius for nearest neighbor queries. Tile widths for each dimension
+of X are int((b[i] - a[i]) / radius) where b and a are the
+max and min values of X[:,i].</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="econlearn.tile.TilecodeNearestNeighbour.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em>, <em>thresh=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeNearestNeighbour.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeNearestNeighbour.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain nearest neighbors (points within distance radius)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : array of shape [N, D]</p>
+<blockquote>
+<div><p>Query points</p>
+</div></blockquote>
+<p><strong>thresh</strong> : int, (default=1)</p>
+<blockquote>
+<div><p>Only include points if they are active in at least thresh layers (max is L)
+Higher thresh values will tend to exclude the points furthest from the query point</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Y</strong> : list of arrays (length = N)</p>
+<blockquote class="last">
+<div><p>Nearest neighbors for each query point</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="econlearn.tile.TilecodeQVIteration">
+<em class="property">class </em><code class="descclassname">econlearn.tile.</code><code class="descname">TilecodeQVIteration</code><span class="sig-paren">(</span><em>D</em>, <em>T</em>, <em>L</em>, <em>radius</em>, <em>beta</em>, <em>ms=1</em>, <em>mem_max=1</em>, <em>cores=1</em>, <em>ASGD=True</em>, <em>linT=6</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeQVIteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeQVIteration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solve a MDP with 1 policy variable and D state variables by Q-V Iteration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>D</strong> : int,</p>
+<blockquote>
+<div><p>Number of state variables</p>
+</div></blockquote>
+<p><strong>T</strong> : list of integers, length D</p>
+<blockquote>
+<div><p>Number of tiles per dimension</p>
+</div></blockquote>
+<p><strong>L</strong> : int,</p>
+<blockquote>
+<div><p>Number of tilings or &#8216;layers&#8217;</p>
+</div></blockquote>
+<p><strong>radius</strong> : float,</p>
+<blockquote>
+<div><p>Radius for state space sample grid</p>
+</div></blockquote>
+<p><strong>beta</strong> : float in (0, 1),</p>
+<blockquote>
+<div><p>Discount rate</p>
+</div></blockquote>
+<p><strong>ms</strong> : int, optional (default = 1)</p>
+<blockquote>
+<div><p>Minimum samples per tile for the Q function</p>
+</div></blockquote>
+<p><strong>mem_max</strong> : float, optional (default = 1)</p>
+<blockquote>
+<div><p>Tile array size, values less than 1 turns on hashing</p>
+</div></blockquote>
+<p><strong>cores</strong> : int, optional (default=1)</p>
+<blockquote>
+<div><p>Number of CPU cores to use</p>
+</div></blockquote>
+<p><strong>ASGD</strong> : boolean, optional (default=True)</p>
+<blockquote>
+<div><p>Fit Q function by ASGD</p>
+</div></blockquote>
+<p><strong>offset</strong> : {&#8216;optimal&#8217;, &#8216;random&#8217;, &#8216;uniform&#8217;}, (default=&#8217;optimal&#8217;)</p>
+<blockquote>
+<div><p>Type of displacement vector used</p>
+</div></blockquote>
+<p><strong>linT</strong> : integer, optional (default=6)</p>
+<blockquote class="last">
+<div><p>Number of linear spline knots per dimension</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="econlearn.tile.TilecodeQVIteration.iterate">
+<code class="descname">iterate</code><span class="sig-paren">(</span><em>XA</em>, <em>X1</em>, <em>R</em>, <em>A_low</em>, <em>A_high</em>, <em>ITER=50</em>, <em>plot=False</em>, <em>plotdim=0</em>, <em>output=True</em>, <em>a=0</em>, <em>b=0</em>, <em>pc_samp=1</em>, <em>eta=0.8</em>, <em>maxT=60000</em>, <em>tilesg=False</em>, <em>sg_points=100</em>, <em>sg_prop=0.96</em>, <em>sg_samp=1</em>, <em>sgmem_max=0.4</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeQVIteration.iterate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeQVIteration.iterate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform QV iteration given a set of training data (N state-action and state transition samples) 
+to derive optimal value and policy functions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>XA</strong> : array of shape [N, D + 1]</p>
+<blockquote>
+<div><p>State-action samples (i.e., actions in first column, then state variables)</p>
+</div></blockquote>
+<p><strong>X1</strong> : array of shape [N, D]</p>
+<blockquote>
+<div><p>State transition samples (i.e., state at t+1)</p>
+</div></blockquote>
+<p><strong>R</strong> : array of shape [N,]</p>
+<blockquote>
+<div><p>Payoff samples</p>
+</div></blockquote>
+<p><strong>A_low</strong> : array of shape [N,],</p>
+<blockquote>
+<div><p>Lower feasible bound for action A conditional on X</p>
+</div></blockquote>
+<p><strong>A_high</strong> : array of shape [N,],</p>
+<blockquote>
+<div><p>Upper feasible bound for action A conditional on X</p>
+</div></blockquote>
+<p><strong>ITER</strong> : int, optional (default = 50)</p>
+<blockquote>
+<div><p>Number of iterations</p>
+</div></blockquote>
+<p><strong>plot</strong> : boolean, optional (default = True)</p>
+<blockquote>
+<div><p>Whether to generate plots of the final value and policy function.</p>
+</div></blockquote>
+<p><strong>plotdim</strong> : int in [0, D],  optional (default = 0)</p>
+<blockquote>
+<div><p>Which state dimension to plot 
+(other dimensions are held fixed at their mean values).</p>
+</div></blockquote>
+<p><strong>a</strong> : array, optional, shape=(D)</p>
+<blockquote>
+<div><p>Percentile to use for minimum tiling domain (if not provided set to 0)</p>
+</div></blockquote>
+<p><strong>b</strong> : array, optional, shape=(D)</p>
+<blockquote>
+<div><p>Percentile to use for maximum tiling domain (if not provided set to 100)</p>
+</div></blockquote>
+<p><strong>pc_samp</strong> : float, optional, (default=1)</p>
+<blockquote>
+<div><p>Proportion of sample to use when calculating percentile ranges</p>
+</div></blockquote>
+<p><strong>output</strong> : boolean, optional (default=True)</p>
+<blockquote>
+<div><p>Whether to print value function change updates each iteration</p>
+</div></blockquote>
+<p><strong>eta</strong> : float (default=.01)</p>
+<blockquote>
+<div><p>ASGD / SGD learning rate</p>
+</div></blockquote>
+<p><strong>maxT</strong> : int, default (default=60000)</p>
+<blockquote>
+<div><p>ASGD / SGD learning rate parameter</p>
+</div></blockquote>
+<p><strong>tilesg</strong> : boolean, (default=False)</p>
+<blockquote>
+<div><p>If True then will use tilecoding to build state space sample grid
+else will use distance method. Tilecoding is preferred for large samples.</p>
+</div></blockquote>
+<p><strong>sg_points</strong> : int, (default=100)</p>
+<blockquote>
+<div><p>If tilesg=False, then the number of points in the state space sample grid</p>
+</div></blockquote>
+<p><strong>sg_prop</strong> : float, (default=0.96)</p>
+<blockquote>
+<div><p>If tilesg=True, then the proportion of points to include in the 
+state space sample grid (set less than 1 to exclude outliers)</p>
+</div></blockquote>
+<p><strong>sg_samp</strong> : float, (default=0.5)</p>
+<blockquote>
+<div><p>If tilesg=True, then the proportion of the sample points to use for the 
+state space sample grid</p>
+</div></blockquote>
+<p><strong>sgmem_max</strong> : float, (default = 0.4)</p>
+<blockquote class="last">
+<div><p>If tilesg=True, then the mem_max (hashing) parameter of the sample grid
+tilecode scheme.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="econlearn.tile.TilecodeQVIteration.maximise">
+<code class="descname">maximise</code><span class="sig-paren">(</span><em>grid</em>, <em>A_low</em>, <em>A_high</em>, <em>output=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeQVIteration.maximise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeQVIteration.maximise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximises current Q-function for a subset of state space points and returns new value and policy functions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>grid</strong> : array, shape=(N, D)</p>
+<blockquote>
+<div><p>State space grid</p>
+</div></blockquote>
+<p><strong>A_low</strong> : array, shape=(N,)</p>
+<blockquote>
+<div><p>action lower bound</p>
+</div></blockquote>
+<p><strong>A_high</strong> : array, shape=(N,)</p>
+<blockquote>
+<div><p>action upper bound</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ERROR: float</p>
+<blockquote class="last">
+<div><p>Mean absolute deviation</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="econlearn.tile.TilecodeQVIteration.resetQ">
+<code class="descname">resetQ</code><span class="sig-paren">(</span><em>D</em>, <em>T</em>, <em>L</em>, <em>mem_max=1</em>, <em>ms=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeQVIteration.resetQ"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeQVIteration.resetQ" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the Q function</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>D</strong> : int,</p>
+<blockquote>
+<div><p>Number of state variables</p>
+</div></blockquote>
+<p><strong>T</strong> : list of integers, length D</p>
+<blockquote>
+<div><p>Number of tiles per dimension</p>
+</div></blockquote>
+<p><strong>L</strong> : int,</p>
+<blockquote>
+<div><p>Number of tilings or &#8216;layers&#8217;</p>
+</div></blockquote>
+<p><strong>mem_max</strong> : float, optional (default = 1)</p>
+<blockquote>
+<div><p>Tile array size, values less than 1 turns on hashing</p>
+</div></blockquote>
+<p><strong>ms</strong> : int, optional (default = 1)</p>
+<blockquote class="last">
+<div><p>Minimum samples per tile for the Q function</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="econlearn.tile.TilecodeRegressor">
+<em class="property">class </em><code class="descclassname">econlearn.tile.</code><code class="descname">TilecodeRegressor</code><span class="sig-paren">(</span><em>D</em>, <em>T</em>, <em>L</em>, <em>mem_max=1</em>, <em>min_sample=1</em>, <em>offset='optimal'</em>, <em>lin_spline=False</em>, <em>linT=7</em>, <em>cores=4</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeRegressor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeRegressor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tile coding for function approximation (Supervised Learning).  
+Fits by averaging and/or Stochastic Gradient Descent.
+Supports multi-core fit and predict. Options for uniform, random or &#8216;optimal&#8217; displacement vectors.
+Provides option for linear spline extrapolation / filling</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>D</strong> : integer</p>
+<blockquote>
+<div><p>Total number of input dimensions</p>
+</div></blockquote>
+<p><strong>T</strong> : list of integers, length D</p>
+<blockquote>
+<div><p>Number of tiles per dimension</p>
+</div></blockquote>
+<p><strong>L</strong> : integer</p>
+<blockquote>
+<div><p>Number of tiling &#8216;layers&#8217;</p>
+</div></blockquote>
+<p><strong>mem_max</strong> : double, (default=1)</p>
+<blockquote>
+<div><p>Proportion of tiles to store in memory: less than 1 means hashing is used.</p>
+</div></blockquote>
+<p><strong>min_sample</strong> : integer, (default=50)</p>
+<blockquote>
+<div><p>Minimum number of observations per tile</p>
+</div></blockquote>
+<p><strong>offset</strong> : string, (default=&#8217;uniform&#8217;)</p>
+<blockquote>
+<div><p>Type of displacement vector, one of &#8216;uniform&#8217;, &#8216;random&#8217; or &#8216;optimal&#8217;</p>
+</div></blockquote>
+<p><strong>lin_spline</strong> : boolean, (default=False)</p>
+<blockquote>
+<div><p>Use sparse linear spline model to extrapolate / fill empty tiles</p>
+</div></blockquote>
+<p><strong>linT</strong> : integer, (default=6)</p>
+<blockquote class="last">
+<div><p>Number of linear spline knots per dimension</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>tile</td>
+<td>(Cython Tilecode instance)</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="econlearn.tile.TilecodeRegressor.check_memory">
+<code class="descname">check_memory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeRegressor.check_memory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeRegressor.check_memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides information on the current memory usage of the tilecoding scheme.
+If memory usage is an issue call this function after fitting and then consider rebuilding the scheme with a lower <cite>mem_max</cite> parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="econlearn.tile.TilecodeRegressor.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>Y</em>, <em>method='A'</em>, <em>score=False</em>, <em>copy=True</em>, <em>a=0</em>, <em>b=0</em>, <em>pc_samp=1</em>, <em>eta=0.01</em>, <em>n_iters=1</em>, <em>scale=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeRegressor.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeRegressor.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate tilecode weights. 
+Supports <a href="#id1"><span class="problematic" id="id2">`</span></a>Averaging&#8217;, Stochastic Gradient Descent (SGD) and Averaged SGD.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : array, shape=(N, D)</p>
+<blockquote>
+<div><p>Input data (unscaled)</p>
+</div></blockquote>
+<p><strong>Y</strong> : array, shape=(N)</p>
+<blockquote>
+<div><p>Output data (unscaled)</p>
+</div></blockquote>
+<p><strong>method</strong> : string (default=&#8217;A&#8217;)</p>
+<blockquote>
+<div><p>Estimation method, one of &#8216;A&#8217; (for Averaging), &#8216;SGD&#8217; or &#8216;ASGD&#8217;.</p>
+</div></blockquote>
+<p><strong>score</strong> : boolean, (default=False)</p>
+<blockquote>
+<div><p>Calculate R-squared</p>
+</div></blockquote>
+<p><strong>copy</strong> : boolean (default=False)</p>
+<blockquote>
+<div><p>Store X and Y</p>
+</div></blockquote>
+<p><strong>a</strong> : array, optional shape=(D)</p>
+<blockquote>
+<div><p>Percentile to use for minimum tiling range (if not provided set to 0)</p>
+</div></blockquote>
+<p><strong>b</strong> : array, optional, shape=(D)</p>
+<blockquote>
+<div><p>Percentile to use for maximum tiling range (if not provided set to 100)</p>
+</div></blockquote>
+<p><strong>pc_samp</strong> : float, optional, (default=1)</p>
+<blockquote>
+<div><p>Proportion of sample to use when calculating percentile ranges</p>
+</div></blockquote>
+<p><strong>eta</strong> : float (default=.01)</p>
+<blockquote>
+<div><p>SGD Learning rate</p>
+</div></blockquote>
+<p><strong>n_iters</strong> : int (default=1)</p>
+<blockquote>
+<div><p>Number of passes over the data set in SGD</p>
+</div></blockquote>
+<p><strong>scale</strong> : float (default=0)</p>
+<blockquote class="last">
+<div><p>Learning rate scaling factor in SGD</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="econlearn.tile.TilecodeRegressor.plot">
+<code class="descname">plot</code><span class="sig-paren">(</span><em>xargs=['x'], showdata=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeRegressor.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeRegressor.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the function on along one dimension, holding others fixed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>xargs</strong> : list, length = D</p>
+<blockquote>
+<div><p>List of variable default values, set plotting dimension to &#8216;x&#8217;
+Not required if D = 1</p>
+</div></blockquote>
+<p><strong>showdata</strong> : boolean, (default=False)</p>
+<blockquote class="last">
+<div><p>Scatter training points</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="econlearn.tile.TilecodeRegressor.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeRegressor.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeRegressor.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return tilecode predicted value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : array, shape=(N, D) or (D,)</p>
+<blockquote>
+<div><p>Input data</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>Y</strong> : array, shape=(N,)</p>
+<blockquote class="last">
+<div><p>Predicted values</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="econlearn.tile.TilecodeSamplegrid">
+<em class="property">class </em><code class="descclassname">econlearn.tile.</code><code class="descname">TilecodeSamplegrid</code><span class="sig-paren">(</span><em>D</em>, <em>L</em>, <em>mem_max=1</em>, <em>cores=1</em>, <em>offset='optimal'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeSamplegrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeSamplegrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a sample grid (sample of approximately equidistant points) from 
+a  large data set, using a tilecoding data structure</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>D</strong> : int,</p>
+<blockquote>
+<div><p>Number of input dimensions</p>
+</div></blockquote>
+<p><strong>L</strong> : int,</p>
+<blockquote>
+<div><p>Number of tilings or &#8216;layers&#8217;</p>
+</div></blockquote>
+<p><strong>mem_max</strong> : float, optional (default = 1)</p>
+<blockquote>
+<div><p>Tile array size, values less than 1 turn on hashing</p>
+</div></blockquote>
+<p><strong>cores</strong> : int, optional (default=1)</p>
+<blockquote>
+<div><p>Number of CPU cores to use (fitting stage is parallelized)</p>
+</div></blockquote>
+<p><strong>offset</strong> : {&#8216;optimal&#8217;, &#8216;random&#8217;, &#8216;uniform&#8217;}, optional</p>
+<blockquote class="last">
+<div><p>Type of displacement vector used</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>This is an approximate method: it is possible that the resulting sample will contain
+some points less than <code class="docutils literal"><span class="pre">radius</span></code> distance apart. The accuracy improves with the number 
+of layers <code class="docutils literal"><span class="pre">L</span></code>.</p>
+<p>Currently the tile widths are defined as <code class="docutils literal"><span class="pre">int((b</span> <span class="pre">-</span> <span class="pre">a)</span>&nbsp; <span class="pre">/</span> <span class="pre">radius)**-1</span></code>, so small changes in 
+radius may have no effect.</p>
+<dl class="method">
+<dt id="econlearn.tile.TilecodeSamplegrid.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>radius</em>, <em>prop=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/econlearn/tile.html#TilecodeSamplegrid.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#econlearn.tile.TilecodeSamplegrid.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a density function to X and return a sample grid with a maximum of M points</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : array of shape [N, D]</p>
+<blockquote>
+<div><p>Input data (unscaled)</p>
+</div></blockquote>
+<p><strong>radius</strong> : float</p>
+<blockquote>
+<div><p>minimum distance between points. This determines tile widths.</p>
+</div></blockquote>
+<p><strong>prop</strong> : float in (0, 1), optional (default=1.0)</p>
+<blockquote>
+<div><p>Proportion of sample points to return (lowest density points are excluded)</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">GRID, array of shape [M, D]</p>
+<blockquote class="last">
+<div><p>The sample grid with M &lt; N points</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Econlearn documentation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014, Neal Hughes.
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
