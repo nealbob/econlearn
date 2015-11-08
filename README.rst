@@ -4,7 +4,7 @@ econlearn
 
 A python machine learning toolkit for economists.
 
-Documentation   Examples
+`Documentation <https://nealhughes.net/econlearn>`_
 
 Overview
 ========
@@ -47,6 +47,8 @@ This code has been developed and tested on linux machines only. In windows a com
 Development
 ===========
 
-``econlearn`` is a work in progress. So far only the tile coding methods are available, In time I will hopefully add more algorithms including: distance based sample grid, radial basis function regression, distance weighted regression and local quadratic regression.
+``econlearn`` is a work in progress. So far only the tile coding methods are available. In time I will hopefully add more algorithms including: distance based sample grid, radial basis function regression, distance weighted regression and local quadratic regression.
 
 While not documented, the underlying Cython modules may be of use to those wanting to access these learning methods quickly within larger applications / models. Including those wanting to implement the reinforcement learning methods in a multi-agent simulation model.
+
+The documentation is also a work in progress. The next job is to add some examples.
