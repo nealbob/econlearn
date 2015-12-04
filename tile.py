@@ -8,6 +8,7 @@ import pylab
 from tilecode import Tilecode
 from tilecode import buildgrid 
 
+
 class TilecodeSamplegrid:
 
     """
